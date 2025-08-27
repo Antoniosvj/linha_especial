@@ -3,6 +3,7 @@ package com.antoniosvj.ecommerce.ecommerce_backend.controllers;
 import com.antoniosvj.ecommerce.ecommerce_backend.entidade.Produto;
 import com.antoniosvj.ecommerce.ecommerce_backend.repositorio.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController // indica que é um controlador que retorna dados
 @RequestMapping("/api/produtos") // todas as rotas começaram /api/produtos
@@ -51,6 +55,27 @@ public class ProdutoController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/categorias")
+    public List<String> listarCategoriasUnicas(){
+        List<Produto> todosOsProdutos = produtoRepository.findAll();
+        Set<String> categoriasUnicas = new HashSet<>();
+        for (Produto produto : todosOsProdutos){
+            categoriasUnicas.add(produto.getCategoria());
+        }
+        return new ArrayList<>(categoriasUnicas);
+    }
+
+    @GetMapping("/categoria")
+    public ResponseEntity<List<Produto>> buscarPorCategoria(@RequestParam String categoria) {
+        List<Produto> produtos = produtoRepository.findByCategoriaIgnoreCase(categoria);
+
+        if (!produtos.isEmpty()) {
+            return new ResponseEntity<>(produtos, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    } 
 
     @PostMapping
     public ResponseEntity<Produto> criarProduto(@RequestBody Produto produto) {

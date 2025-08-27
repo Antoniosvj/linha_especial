@@ -16,4 +16,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long>{ //crian
     List<Produto> findByNomeContainingIgnoreCase(String nome); 
     //containing para buscar a palavra que contenha
     //ignore case serva para não diferenciar maiuscula e minuscula
+
+    List<Produto> findByCategoriaIgnoreCase(String categoria);
 }
