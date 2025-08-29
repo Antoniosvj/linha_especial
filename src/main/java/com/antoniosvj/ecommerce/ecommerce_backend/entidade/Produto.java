@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.persistence.OneToMany;
+import java.util.List;
 
 import java.math.BigDecimal;
 
@@ -27,4 +29,7 @@ public class Produto {
     private String imagemUrl;
 
     private String categoria;
+
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Estoque> estoque;
 }
